@@ -1,0 +1,15 @@
+angular (learn-angular-from-scratch-step-by-step):
+	ng new <app-name>							- create new app
+	npm install --global windows-build-tools	- install windows npm tools (just once!)
+	npm install									- pull dependencies
+	ng serve									- host
+
+loopback:
+	npm run migrate							- run db migrations (update schema)
+	npm start 								- build & start server
+	http://localhost:3000/explorer/# 		- check endpoints
+	
+	lb4 datasource							- create datasource (connection to database)
+	lb4 model								- create entity model that will be peristed
+	lb4 repository							- create repository to mark model as peristable to db
+	lb4 controller							- create controller to perform basic CRUD operations

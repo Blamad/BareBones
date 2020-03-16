@@ -1,0 +1,15 @@
+<div>
+    <span>Users list:</span>
+    <ul>
+        <li *ngFor="let user of users">
+          {{user.name}}
+        </li>
+    </ul>
+
+    <span>New user:</span>
+        <form [formGroup]="userForm" class="form" (ngSubmit)="onSubmit(userForm.value)">
+            <span>Name: </span><textarea rows=1 class="form-control form-input" type="text" formControlName="name"></textarea><br/>
+            <span>Email: </span><textarea rows=1 class="form-control form-input" type="text" formControlName="email"></textarea><br/>
+            <button type="submit" [disabled]="!userForm.valid">Submit</button>
+        </form>
+</div>

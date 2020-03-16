@@ -1,0 +1,10 @@
+{
+  "name": "main",
+  "connector": "postgresql",
+  "url": "postgres://postgres:super@localhost/barebones",
+  "host": "localhost",
+  "port": 5432,
+  "user": "postgres",
+  "password": "super",
+  "database": "barebones"
+}
