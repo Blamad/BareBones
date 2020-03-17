@@ -9,7 +9,7 @@ import {Entity, model, property} from '@loopback/repository';
 })
 export class User extends Entity {
   @property({
-    type: 'serial',
+    type: 'number',
     id: true,
     generated: true,
   })

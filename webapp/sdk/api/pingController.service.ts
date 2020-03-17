@@ -24,7 +24,9 @@ import { Configuration }                                     from '../configurat
 
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class PingControllerService {
 
     protected basePath = 'http://127.0.0.1:3000';

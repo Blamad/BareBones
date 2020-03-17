@@ -27,7 +27,9 @@ import { Configuration }                                     from '../configurat
 
 
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserControllerService {
 
     protected basePath = 'http://127.0.0.1:3000';
