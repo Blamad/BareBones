@@ -1,15 +1,22 @@
-angular (learn-angular-from-scratch-step-by-step):
-	ng new <app-name>							- create new app
-	npm install --global windows-build-tools	- install windows npm tools (just once!)
-	npm install									- pull dependencies
-	ng serve									- host
+angular (webapp):
+	npm install --global windows-build-tools			- install windows npm tools (just once!)
+	npm install							- pull dependencies
+	ng serve							- host
 
 loopback:
 	npm run migrate							- run db migrations (update schema)
-	npm start 								- build & start server
-	http://localhost:3000/explorer/# 		- check endpoints
+	npm start 							- build & start server
+	http://localhost:3000/explorer/# 				- check and test endpoints using browser
 	
 	lb4 datasource							- create datasource (connection to database)
-	lb4 model								- create entity model that will be peristed
+	lb4 model							- create entity model that will be peristed
 	lb4 repository							- create repository to mark model as peristable to db
 	lb4 controller							- create controller to perform basic CRUD operations
+
+Notes:
+Before you run migration for the 1st time make sure to create schema in your db (check server/src/datasources/main.datasource.json for more info).
+
+Loopback - webapp communication:
+To generate code needed to communicate with server use one of the sdk-update scripts.
+Executed while server is running it will generate all necessary data and services needed to use endpoints from webapp.
+Generated code is located in webapp/sdk.
