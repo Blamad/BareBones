@@ -11,5 +11,6 @@ loopback:
 	
 	lb4 datasource							- create datasource (connection to database)
 	lb4 model								- create entity model that will be peristed
+	lb4 relation							- create relation between models
 	lb4 repository							- create repository to mark model as peristable to db
 	lb4 controller							- create controller to perform basic CRUD operations

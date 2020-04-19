@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasOne} from '@loopback/repository';
+import {UserCredentials} from './user-credentials.model';
 
 @model({
   settings: {
@@ -46,6 +47,14 @@ export class User extends Entity {
   })
   isBlocked: boolean;
 
+  @hasOne(() => UserCredentials)
+  userCredentials: UserCredentials;
+
+  @property({
+    type: 'array',
+    itemType: 'string',
+  })
+  roles?: string[];
 
   constructor(data?: Partial<User>) {
     super(data);
