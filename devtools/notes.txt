@@ -5,7 +5,7 @@ angular (learn-angular-from-scratch-step-by-step):
 	ng serve									- host
 
 loopback:
-	npm run migrate							- run db migrations (update schema)
+	npm run build; npm run migrate			- run db migrations (update schema)
 	npm start 								- build & start server
 	http://localhost:3000/explorer/# 		- check endpoints
 	

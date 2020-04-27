@@ -20,23 +20,24 @@ import {
   requestBody,
   HttpErrors,
 } from '@loopback/rest';
-import {User} from '../models';
-import {UserRepository} from '../repositories';
+import { User } from '../models';
+import { UserRepository } from '../repositories';
 import {
   TokenService,
   UserService,
   authenticate,
 } from '@loopback/authentication';
-import {Credentials} from '../repositories/user.repository';
-import {PasswordHasher} from '../services/hash.password.bcryptjs';
+import { Credentials } from '../repositories/user.repository';
+import { PasswordHasher } from '../services/hash.password.bcryptjs';
 import { TokenServiceBindings, UserServiceBindings, PasswordHasherBindings } from '../keys';
 import { inject } from '@loopback/core';
 import { CredentialsRequestBody } from './specs/user-controller.specs';
 import _ = require('lodash');
 import { validateCredentials } from '../services/validator';
-import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
-import {authorize} from '@loopback/authorization';
-import {basicAuthorization} from '../services/basic.authorizor';
+import { OPERATION_SECURITY_SPEC } from '../utils/security-spec';
+import { authorize } from '@loopback/authorization';
+import { basicAuthorization } from '../services/basic.authorizor';
+import { Roles } from '../constants/roles.constants';
 
 @model()
 export class NewUserRequest extends User {
@@ -50,14 +51,14 @@ export class NewUserRequest extends User {
 export class UserController {
   constructor(
     @repository(UserRepository)
-    public userRepository : UserRepository,
+    public userRepository: UserRepository,
     @inject(PasswordHasherBindings.PASSWORD_HASHER)
     public passwordHasher: PasswordHasher,
     @inject(TokenServiceBindings.TOKEN_SERVICE)
     public jwtService: TokenService,
     @inject(UserServiceBindings.USER_SERVICE)
     public userService: UserService<User, Credentials>,
-  ) {}
+  ) { }
 
   @post('/users', {
     security: OPERATION_SECURITY_SPEC,
@@ -76,7 +77,7 @@ export class UserController {
   })
   @authenticate('jwt')
   @authorize({
-    allowedRoles: ['admin', 'customer'],
+    allowedRoles: [Roles.ADMIN_ROLE],
     voters: [basicAuthorization],
   })
   async create(
@@ -92,7 +93,7 @@ export class UserController {
     newUserRequest: NewUserRequest,
   ): Promise<User> {
     // All new users have the "customer" role by default
-    newUserRequest.roles = ['customer'];
+    newUserRequest.roles = [Roles.ADMIN_ROLE];
     // ensure a valid email value and password value
     validateCredentials(_.pick(newUserRequest, ['email', 'password']));
 
@@ -110,7 +111,7 @@ export class UserController {
       // set the password
       await this.userRepository
         .userCredentials(savedUser.id)
-        .create({password});
+        .create({ password });
 
       return savedUser;
     } catch (error) {
@@ -128,13 +129,13 @@ export class UserController {
     responses: {
       '200': {
         description: 'User model count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
   @authenticate('jwt')
   @authorize({
-    allowedRoles: ['admin', 'customer'],
+    allowedRoles: [Roles.ADMIN_ROLE],
     voters: [basicAuthorization],
   })
   async count(
@@ -150,7 +151,7 @@ export class UserController {
         description: 'Array of User model instances',
         content: {
           'application/json': {
-            schema: {type: 'array', items: getModelSchemaRef(User)},
+            schema: { type: 'array', items: getModelSchemaRef(User) },
           },
         },
       },
@@ -158,7 +159,7 @@ export class UserController {
   })
   @authenticate('jwt')
   @authorize({
-    allowedRoles: ['admin', 'customer'],
+    allowedRoles: [Roles.ADMIN_ROLE],
     voters: [basicAuthorization],
   })
   async find(
@@ -172,20 +173,20 @@ export class UserController {
     responses: {
       '200': {
         description: 'User PATCH success count',
-        content: {'application/json': {schema: CountSchema}},
+        content: { 'application/json': { schema: CountSchema } },
       },
     },
   })
   @authenticate('jwt')
   @authorize({
-    allowedRoles: ['admin', 'customer'],
+    allowedRoles: [Roles.ADMIN_ROLE],
     voters: [basicAuthorization],
   })
   async updateAll(
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(User, { partial: true }),
         },
       },
     })
@@ -200,13 +201,13 @@ export class UserController {
     responses: {
       '200': {
         description: 'User model instance',
-        content: {'application/json': {schema: getModelSchemaRef(User)}},
+        content: { 'application/json': { schema: getModelSchemaRef(User) } },
       },
     },
   })
   @authenticate('jwt')
   @authorize({
-    allowedRoles: ['admin', 'customer'],
+    allowedRoles: [Roles.ADMIN_ROLE],
     voters: [basicAuthorization],
   })
   async findById(@param.path.number('id') id: number): Promise<User> {
@@ -223,7 +224,7 @@ export class UserController {
   })
   @authenticate('jwt')
   @authorize({
-    allowedRoles: ['admin', 'customer'],
+    allowedRoles: [Roles.ADMIN_ROLE],
     voters: [basicAuthorization],
   })
   async updateById(
@@ -231,7 +232,7 @@ export class UserController {
     @requestBody({
       content: {
         'application/json': {
-          schema: getModelSchemaRef(User, {partial: true}),
+          schema: getModelSchemaRef(User, { partial: true }),
         },
       },
     })
@@ -250,7 +251,7 @@ export class UserController {
   })
   @authenticate('jwt')
   @authorize({
-    allowedRoles: ['admin', 'customer'],
+    allowedRoles: [Roles.ADMIN_ROLE],
     voters: [basicAuthorization],
   })
   async replaceById(
@@ -270,7 +271,7 @@ export class UserController {
   })
   @authenticate('jwt')
   @authorize({
-    allowedRoles: ['admin', 'customer'],
+    allowedRoles: [Roles.ADMIN_ROLE],
     voters: [basicAuthorization],
   })
   async deleteById(@param.path.number('id') id: number): Promise<void> {
@@ -298,7 +299,7 @@ export class UserController {
   })
   async login(
     @requestBody(CredentialsRequestBody) credentials: Credentials,
-  ): Promise<{token: string}> {
+  ): Promise<{ token: string, expiresIn: number }> {
     // ensure the user exists, and the password is correct
     const user = await this.userService.verifyCredentials(credentials);
 
@@ -307,7 +308,8 @@ export class UserController {
 
     // create a JSON Web Token based on the user profile
     const token = await this.jwtService.generateToken(userProfile);
+    const expiresIn = 15 * 60;
 
-    return {token};
+    return { token, expiresIn };
   }
 }

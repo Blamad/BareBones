@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserControllerService } from '../../../sdk/api/userController.service';
 import { Validators, FormGroup, FormControl} from '@angular/forms';
 import { User } from '../../../sdk/model/user';
+import { NewUser } from 'sdk/model/newUser';
 
 @Component({
     selector: 'app-users',
@@ -25,12 +26,13 @@ import { User } from '../../../sdk/model/user';
     }
 
     onSubmit(value) {
-        const user: User = {
+        const user: NewUser = {
             name: value.name,
             email: value.email,
             creationDate: new Date(),
             lastUpdatedDate: new Date(),
-            isBlocked: false
+            isBlocked: false,
+            password: ''
         };
         this.userService.userControllerCreate(user)
             .subscribe(() => this.fetchUserData());
