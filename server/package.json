@@ -61,7 +61,7 @@
     "casbin": "4.2.1",
     "isemail": "^3.2.0",
     "jsonwebtoken": "8.5.1",
-    "loopback-connector-postgresql": "^3.9.0"
+    "loopback-connector-postgresql": "^5.5.1"
   },
   "devDependencies": {
     "@loopback/build": "^5.0.1",
